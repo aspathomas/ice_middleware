@@ -8,6 +8,8 @@ module Demo
 {
     interface Hello
     {
-        void sayHello();
+        idempotent void sayHello(int delay);
+        idempotent void addMusic(string music);
+        void shutdown();
     }
 }
