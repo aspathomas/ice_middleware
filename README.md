@@ -23,3 +23,5 @@ timeout.
 [3]: https://doc.zeroc.com/ice/3.7/ice-plugins/icessl
 [4]: https://doc.zeroc.com/ice/3.7/client-side-features/batched-invocations
 [5]: https://doc.zeroc.com/ice/3.7/client-side-features/invocation-timeouts
+
+pip install zeroc-ice

@@ -5,10 +5,14 @@
 
 import sys
 import Ice
+import pydub
+import base64
 
 Ice.loadSlice('Hello.ice')
 import Demo
 
+def sendMusic():
+    print("test")
 
 def run(communicator):
     twoway = Demo.HelloPrx.checkedCast(
@@ -35,7 +39,9 @@ def run(communicator):
             sys.stdout.flush()
             c = sys.stdin.readline().strip()
             if c == 'a':
-                twoway.addMusic("Music")
+                music = pydub.AudioSegment.from_file(file = "music_client/Back_in_Black.mp3", format = "mp3")
+                print(music)
+                twoway.addMusic(base64.b64encode(music))
             elif c == 't':
                 twoway.sayHello(delay)
             elif c == 'o':
