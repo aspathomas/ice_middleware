@@ -19,7 +19,13 @@ class HelloI(Demo.Hello):
             time.sleep(delay / 1000.0)
         print("Hello World!")
 
-    def addMusic(self, music, current):
+    def __init__(self) :
+        self.music = {}
+        
+    def sendPartMusic(self, part_music : bytes, current):
+        self.music += part_music
+
+    def addMusic(self, title : str, current):
         MusicServ = MusicService()
         MusicServ.addMusic(music)
         print(music)

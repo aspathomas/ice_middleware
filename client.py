@@ -39,9 +39,10 @@ def run(communicator):
             sys.stdout.flush()
             c = sys.stdin.readline().strip()
             if c == 'a':
-                music = pydub.AudioSegment.from_file(file = "music_client/Back_in_Black.mp3", format = "mp3")
-                print(music)
-                twoway.addMusic(base64.b64encode(music))
+                with open('music_client/Back_in_Black.mp3', 'a') as the_file:
+                    parts_music = divmod(the_file.read(), 102400)
+                print(parts_music)
+                twoway.addMusic("toto")
             elif c == 't':
                 twoway.sayHello(delay)
             elif c == 'o':
