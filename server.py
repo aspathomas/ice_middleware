@@ -7,28 +7,37 @@ import signal
 import sys
 import time
 import Ice
-from musicService import MusicService
+import vlc
 
-Ice.loadSlice('Hello.ice')
+Ice.loadSlice('Music.ice')
 import Demo
 
 
-class HelloI(Demo.Hello):
+class MusicI(Demo.Music):
     def sayHello(self, delay, current):
         if delay != 0:
             time.sleep(delay / 1000.0)
         print("Hello World!")
 
     def __init__(self) :
-        self.music = {}
-        
-    def sendPartMusic(self, part_music : bytes, current):
-        self.music += part_music
+        self.index = 0
+        self.uploadingFiles = {}
 
-    def addMusic(self, title : str, current):
-        MusicServ = MusicService()
-        MusicServ.addMusic(music)
-        print(music)
+    def sendMusicPart(self, id, part, current=None):
+        if id not in self.uploadingFiles: self.uploadingFiles[id] = b""
+        self.uploadingFiles[id] += part
+        return 0
+
+    def uploadMusic(self, id, filename, current=None):
+        file = open("music_server/" + filename, "wb")
+        file.write(self.uploadingFiles[id])
+        file.close()
+        return 0
+
+    def getNewIndex(self, current=None):
+        index = self.index
+        self.index += 1
+        return index
 
     def shutdown(self, current):
         current.adapter.getCommunicator().shutdown()
@@ -53,7 +62,7 @@ with Ice.initialize(sys.argv, "config.server") as communicator:
         print(sys.argv[0] + ": too many arguments")
         sys.exit(1)
 
-    adapter = communicator.createObjectAdapter("Hello")
-    adapter.add(HelloI(), Ice.stringToIdentity("hello"))
+    adapter = communicator.createObjectAdapter("Music")
+    adapter.add(MusicI(), Ice.stringToIdentity("music"))
     adapter.activate()
     communicator.waitForShutdown()

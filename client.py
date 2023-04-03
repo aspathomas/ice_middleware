@@ -3,29 +3,28 @@
 # Copyright (c) ZeroC, Inc. All rights reserved.
 #
 
-import sys
 import Ice
-import pydub
-import base64
+import glob
+import vlc
+import os
+import sys
 
-Ice.loadSlice('Hello.ice')
+Ice.loadSlice('Music.ice')
 import Demo
 
-def sendMusic():
-    print("test")
 
 def run(communicator):
-    twoway = Demo.HelloPrx.checkedCast(
-        communicator.propertyToProxy('Hello.Proxy').ice_twoway().ice_secure(False))
+    twoway = Demo.MusicPrx.checkedCast(
+        communicator.propertyToProxy('Music.Proxy').ice_twoway().ice_secure(False))
     if not twoway:
         print("invalid proxy")
         sys.exit(1)
 
-    oneway = Demo.HelloPrx.uncheckedCast(twoway.ice_oneway())
-    batchOneway = Demo.HelloPrx.uncheckedCast(twoway.ice_batchOneway())
-    datagram = Demo.HelloPrx.uncheckedCast(twoway.ice_datagram())
-    batchDatagram = Demo.HelloPrx.uncheckedCast(twoway.ice_batchDatagram())
-
+    oneway = Demo.MusicPrx.uncheckedCast(twoway.ice_oneway())
+    batchOneway = Demo.MusicPrx.uncheckedCast(twoway.ice_batchOneway())
+    datagram = Demo.MusicPrx.uncheckedCast(twoway.ice_datagram())
+    batchDatagram = Demo.MusicPrx.uncheckedCast(twoway.ice_batchDatagram())
+    
     secure = False
     timeout = -1
     delay = 0
@@ -39,10 +38,29 @@ def run(communicator):
             sys.stdout.flush()
             c = sys.stdin.readline().strip()
             if c == 'a':
-                with open('music_client/Back_in_Black.mp3', 'a') as the_file:
-                    parts_music = divmod(the_file.read(), 102400)
-                print(parts_music)
-                twoway.addMusic("toto")
+
+                filenameMp3 = "Back_in_Black.mp3"
+
+                # File found
+                file = open(filenameMp3, "rb")
+                fileSize = os.stat(filenameMp3).st_size
+                quotient, remainder = divmod(fileSize, 102400)  # 100kB max = 102400 Bytes
+
+                id = twoway.getNewIndex()
+
+                for i in range(quotient):
+                    part = file.read(102400)
+                    twoway.sendMusicPart(id, part)
+
+                part = file.read(remainder)
+                twoway.sendMusicPart(id, part)
+
+                file.close()
+
+                twoway.uploadMusic(id, filenameMp3)
+                print("File uploaded successfully")
+
+
             elif c == 't':
                 twoway.sayHello(delay)
             elif c == 'o':
@@ -68,9 +86,9 @@ def run(communicator):
                 else:
                     timeout = -1
 
-                twoway = Demo.HelloPrx.uncheckedCast(twoway.ice_invocationTimeout(timeout))
-                oneway = Demo.HelloPrx.uncheckedCast(oneway.ice_invocationTimeout(timeout))
-                batchOneway = Demo.HelloPrx.uncheckedCast(batchOneway.ice_invocationTimeout(timeout))
+                twoway = Demo.MusicPrx.uncheckedCast(twoway.ice_invocationTimeout(timeout))
+                oneway = Demo.MusicPrx.uncheckedCast(oneway.ice_invocationTimeout(timeout))
+                batchOneway = Demo.MusicPrx.uncheckedCast(batchOneway.ice_invocationTimeout(timeout))
 
                 if timeout == -1:
                     print("timeout is now switched off")
@@ -89,11 +107,11 @@ def run(communicator):
             elif c == 'S':
                 secure = not secure
 
-                twoway = Demo.HelloPrx.uncheckedCast(twoway.ice_secure(secure))
-                oneway = Demo.HelloPrx.uncheckedCast(oneway.ice_secure(secure))
-                batchOneway = Demo.HelloPrx.uncheckedCast(batchOneway.ice_secure(secure))
-                datagram = Demo.HelloPrx.uncheckedCast(datagram.ice_secure(secure))
-                batchDatagram = Demo.HelloPrx.uncheckedCast(batchDatagram.ice_secure(secure))
+                twoway = Demo.MusicPrx.uncheckedCast(twoway.ice_secure(secure))
+                oneway = Demo.MusicPrx.uncheckedCast(oneway.ice_secure(secure))
+                batchOneway = Demo.MusicPrx.uncheckedCast(batchOneway.ice_secure(secure))
+                datagram = Demo.MusicPrx.uncheckedCast(datagram.ice_secure(secure))
+                batchDatagram = Demo.MusicPrx.uncheckedCast(batchDatagram.ice_secure(secure))
 
                 if secure:
                     print("secure mode is now on")

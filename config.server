@@ -1,9 +1,9 @@
 #
 # The server creates one single object adapter with the name
-# "Hello". The following line sets the endpoints for this
+# "Music". The following line sets the endpoints for this
 # adapter.
 #
-Hello.Endpoints=tcp -p 10000:udp -p 10000:ssl -p 10001:ws -p 10002:wss -p 10003
+Music.Endpoints=tcp -p 10000:udp -p 10000:ssl -p 10001:ws -p 10002:wss -p 10003
 
 #
 # Only listen on the localhost interface by default.
