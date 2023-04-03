@@ -12,6 +12,21 @@ import sys
 Ice.loadSlice('Music.ice')
 import Demo
 
+class Lecteur:
+
+    def __init__(self):
+        self.vlcInstance = vlc.Instance()
+        self.player = self.vlcInstance.media_player_new()
+        self.player.set_mrl("rtsp://localhost:5000/music")
+
+    def pause(self):
+        self.player.pause()
+
+    def play(self):
+        self.player.play()
+
+    def stop(self):
+        self.player.stop()
 
 def run(communicator):
     twoway = Demo.MusicPrx.checkedCast(
@@ -30,6 +45,8 @@ def run(communicator):
     delay = 0
 
     menu()
+
+    lecteur = Lecteur()
 
     c = None
     while c != 'x':
@@ -62,7 +79,13 @@ def run(communicator):
 
 
             elif c == 't':
-                twoway.sayHello(delay)
+                name = input("Enter the name of a music\n")
+                result = twoway.playMusic(name)
+                if result == True:
+                    lecteur.play()
+                else:
+                    print("Fichier introuvable")
+
             elif c == 'o':
                 oneway.sayHello(delay)
             elif c == 'O':
@@ -121,8 +144,6 @@ def run(communicator):
                 twoway.shutdown()
             elif c == 'x':
                 pass  # Nothing to do
-            elif c == '?':
-                menu()
             else:
                 print("unknown command `" + c + "\'")
                 menu()
@@ -134,7 +155,7 @@ def menu():
     print("""
     usage:
     a: add music
-    t: send greeting as twoway
+    t: play music
     o: send greeting as oneway
     O: send greeting as batch oneway
     d: send greeting as datagram
