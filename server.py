@@ -9,6 +9,7 @@ import time
 import Ice
 import vlc
 import os
+import glob
 
 Ice.loadSlice('Music.ice')
 import Demo
@@ -49,7 +50,7 @@ class MusicI(Demo.Music):
         self.media = self.player.media_new(file)
 
         # Setting media options to cast it
-        self.media.add_option("sout=#rtp{mux=ts,ttl=10,port=5000,sdp=rtsp://127.0.0.1:5000/music}")
+        self.media.add_option("sout=#rtp{mux=ts,ttl=10,port=5000,sdp=rtp://127.0.0.1:5000/music}")
         self.media.add_option("--no-sout-all")
         self.media.add_option("--sout-keep")
         self.media.get_mrl()
@@ -60,6 +61,30 @@ class MusicI(Demo.Music):
         self.media_player.play()
         return True
 
+    def searchMusic(self, musicName, current):
+         # Change the current working directory to the "music_server" directory
+        os.chdir('music_server')
+
+        # Create an empty list to store the music file names that match the search criteria
+        music_list = []
+
+        # Use glob to find music files that match the search string
+        for file_name in glob.glob(f'*{musicName}*'):
+            # If the file is an MP3 file, add it to the music list
+            if file_name.endswith('.mp3'):
+                music_list.append(file_name)
+
+        # Return the list of music file names that match the search criteria
+        return music_list
+        
+
+    def delete(self, musicName, current):
+        file = "music_server/" + musicName + ".mp3"
+        print(file)
+        if (os.path.exists(file)):
+            os.remove(file)
+            return True
+        return False
     def shutdown(self, current):
         current.adapter.getCommunicator().shutdown()
 

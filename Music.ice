@@ -4,7 +4,7 @@
 
 module Demo
 {
-    sequence<string> strList;
+    sequence<string> listMusique;
     sequence<byte> byteSeq;
     interface Music
     {
@@ -12,6 +12,8 @@ module Demo
         bool sendMusicPart(int id, byteSeq part);
         bool uploadMusic(int id, string filename);
         bool playMusic(string musicName);
+        bool delete(string musicName);
+        listMusique searchMusic(string titre);
         int getNewIndex();
         void shutdown();
     }
