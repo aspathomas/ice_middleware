@@ -99,7 +99,7 @@ def run(communicator):
                     lecteur.play()
                     isPlay = True
             elif c == 't':
-                result = twoway.stopMusic(music)
+                result = twoway.stopMusic()
                 if result == True:
                     lecteur.stop()
                 else:
