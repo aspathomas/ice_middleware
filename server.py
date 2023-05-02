@@ -16,10 +16,6 @@ import Demo
 
 
 class MusicI(Demo.Music):
-    def sayHello(self, delay, current):
-        if delay != 0:
-            time.sleep(delay / 1000.0)
-        print("Hello World!")
 
     def __init__(self) :
         self.vlc = vlc.Instance()
@@ -71,10 +67,10 @@ class MusicI(Demo.Music):
         os.chdir('music_server')
         musicList = []
 
-        for file_name in glob.glob(f'*{musicName}*'):
+        for fileName in glob.glob(f'*{musicName}*'):
 
-            if file_name.endswith('.mp3'):
-                musicList.append(file_name)
+            if fileName.endswith('.mp3'):
+                musicList.append(fileName)
         os.chdir(source)
         return musicList
         
