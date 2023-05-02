@@ -47,7 +47,7 @@ class MusicI(Demo.Music):
         file = "music_server/" + musicName + ".mp3"
         print(file)
 
-        if os.path.exists(file) != True:
+        if not os.path.exists(file):
             print('test')
             return False
         
