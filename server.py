@@ -41,10 +41,8 @@ class MusicI(Demo.Music):
     
     def playMusic(self, musicName, current):
         file = "music_server/" + musicName + ".mp3"
-        print(file)
 
         if not os.path.exists(file):
-            print('test')
             return False
         
         media = self.vlc.media_new(file)
