@@ -32,8 +32,8 @@ class MusicI(Demo.Music):
         self.partMusic[id] += part
         return 0
 
-    def uploadMusic(self, id, filename, current):
-        file = open("music_server/" + filename, "wb")
+    def uploadMusic(self, id, music, current):
+        file = open("music_server/" + music, "wb")
         file.write(self.partMusic[id])
         file.close()
         return 0
@@ -45,6 +45,7 @@ class MusicI(Demo.Music):
     
     def playMusic(self, musicName, current):
         file = "music_server/" + musicName + ".mp3"
+        print(file)
 
         if os.path.exists(file) != True: 
             return False
