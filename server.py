@@ -47,18 +47,19 @@ class MusicI(Demo.Music):
         file = "music_server/" + musicName + ".mp3"
         print(file)
 
-        if os.path.exists(file) != True: 
+        if os.path.exists(file) != True:
+            print('test')
             return False
         
-        media = self.player.media_new(file)
+        media = self.vlc.media_new(file)
         media.add_option("sout=#rtp{mux=ts,ttl=10,port=5000,sdp=rtsp://127.0.0.1:5000/music}")
         media.add_option("--no-sout-all")
         media.add_option("--sout-keep")
         media.get_mrl()
-        self.player = self.player.media_player_new()
+        self.player = self.vlc.media_player_new()
         self.player.set_media(media)
-
         self.player.play()
+
         return True
 
     def stopMusic(self, current):
