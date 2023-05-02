@@ -17,7 +17,7 @@ class Lecteur:
     def __init__(self):
         self.vlcInstance = vlc.Instance()
         self.player = self.vlcInstance.media_player_new()
-        self.player.set_mrl("rtsp://localhost:5000/music")
+        self.player.set_mrl("rtsp://127.0.0.1:5000/music")
 
     def pause(self):
         self.player.pause()
@@ -75,7 +75,7 @@ def run(communicator):
                 file.close()
 
                 twoway.uploadMusic(id, filenameMp3)
-                print("File uploaded successfully")
+                print("La musique a bien été envoyé")
 
             elif c == 'r':
                 name = input("Entrer le nom du musique:\n")
@@ -89,7 +89,7 @@ def run(communicator):
                 else:
                     print("échec")
             elif c == 'j':
-                result = twoway.playMusic("Back_in_back")
+                result = twoway.playMusic("Back_in_Back")
                 if result == True:
                     lecteur.play()
                 else:

@@ -50,7 +50,7 @@ class MusicI(Demo.Music):
         self.media = self.player.media_new(file)
 
         # Setting media options to cast it
-        self.media.add_option("sout=#rtp{mux=ts,ttl=10,port=5000,sdp=rtp://127.0.0.1:5000/music}")
+        self.media.add_option("sout=#rtp{mux=ts,ttl=10,port=5000,sdp=rtsp://127.0.0.1:5000/music}")
         self.media.add_option("--no-sout-all")
         self.media.add_option("--sout-keep")
         self.media.get_mrl()
