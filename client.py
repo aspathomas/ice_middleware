@@ -30,7 +30,7 @@ class Lecteur:
 
 def run(communicator):
     twoway = Demo.MusicPrx.checkedCast(
-        communicator.propertyToProxy('Music.Proxy').ice_twoway().ice_secure(False))
+        communicator.propertyToProxy('Music.Proxy').ice_twoway().ice_secure(True))
     if not twoway:
         print("invalid proxy")
         sys.exit(1)
