@@ -122,6 +122,7 @@ def menu():
         s: supprimer une musique
         j: jouer une musique
         p: pause
+        t: stop
         q: quitter le serveur
         x: exit
     """)
