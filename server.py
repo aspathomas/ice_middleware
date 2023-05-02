@@ -67,6 +67,7 @@ class MusicI(Demo.Music):
         return True
     
     def searchMusic(self, musicName, current):
+        source = os.getcwd()
         os.chdir('music_server')
         musicList = []
 
@@ -74,7 +75,7 @@ class MusicI(Demo.Music):
 
             if file_name.endswith('.mp3'):
                 musicList.append(file_name)
-
+        os.chdir(source)
         return musicList
         
 
