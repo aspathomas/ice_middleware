@@ -30,23 +30,17 @@ class Lecteur:
 
 def run(communicator):
     twoway = Demo.MusicPrx.checkedCast(
-        communicator.propertyToProxy('Music.Proxy').ice_twoway().ice_secure(False))
+        communicator.propertyToProxy('Music.Proxy').ice_twoway().ice_secure(True))
     if not twoway:
         print("invalid proxy")
         sys.exit(1)
 
     oneway = Demo.MusicPrx.uncheckedCast(twoway.ice_oneway())
-    batchOneway = Demo.MusicPrx.uncheckedCast(twoway.ice_batchOneway())
-    datagram = Demo.MusicPrx.uncheckedCast(twoway.ice_datagram())
-    batchDatagram = Demo.MusicPrx.uncheckedCast(twoway.ice_batchDatagram())
-    
-    secure = False
-    timeout = -1
-    delay = 0
 
     menu()
 
     lecteur = Lecteur()
+    isPlay = False
 
     c = None
     while c != 'x':
@@ -56,7 +50,8 @@ def run(communicator):
             c = sys.stdin.readline().strip()
             if c == 'a':
 
-                filenameMp3 = "Back_in_Black.mp3"
+                filenameMp3 = input("Entrer le nom du musique:\n")
+                filenameMp3 = filenameMp3 + ".mp3"
 
                 # File found
                 file = open(filenameMp3, "rb")
@@ -78,20 +73,35 @@ def run(communicator):
                 print("La musique a bien été envoyé")
 
             elif c == 'r':
-                name = input("Entrer le nom du musique:\n")
-                list = twoway.searchMusic(name)
+                music = input("Entrer le nom du musique:\n")
+                list = twoway.searchMusic(music)
                 print(list)
             elif c == 's':
-                name = input("Entrer le nom du musique:\n")
-                isDelete = twoway.delete(name)
+                music = input("Entrer le nom du musique:\n")
+                isDelete = twoway.delete(music)
                 if isDelete is True:
                     print("La chanson a été supprimé")
                 else:
                     print("échec")
             elif c == 'j':
-                result = twoway.playMusic("Back_in_Back")
+                music = input("Entrer le nom du musique:\n")
+                result = twoway.playMusic(music)
                 if result == True:
                     lecteur.play()
+                    isPlay = True
+                else:
+                    print("Fichier introuvable")
+            elif c == 'p':
+                if isPlay is True:
+                    lecteur.pause()
+                    isPlay = False
+                else:
+                    lecteur.play()
+                    isPlay = True
+            elif c == 't':
+                result = twoway.stopMusic(music)
+                if result == True:
+                    lecteur.stop()
                 else:
                     print("Fichier introuvable")
             elif c == 'q':
@@ -111,6 +121,7 @@ def menu():
         r: rechercher une musique par titre
         s: supprimer une musique
         j: jouer une musique
+        p: pause
         q: quitter le serveur
         x: exit
     """)

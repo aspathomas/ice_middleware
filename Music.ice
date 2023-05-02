@@ -12,6 +12,7 @@ module Demo
         bool sendMusicPart(int id, byteSeq part);
         bool uploadMusic(int id, string filename);
         bool playMusic(string musicName);
+        bool stopMusic();
         bool delete(string musicName);
         listMusique searchMusic(string titre);
         int getNewIndex();

@@ -22,60 +22,58 @@ class MusicI(Demo.Music):
         print("Hello World!")
 
     def __init__(self) :
-        self.player = vlc.Instance()
-        self.media_player = self.player.media_player_new()
+        self.vlc = vlc.Instance()
+        self.player = self.vlc.media_player_new()
         self.index = 0
-        self.uploadingFiles = {}
+        self.partMusic = {}
 
-    def sendMusicPart(self, id, part, current=None):
-        if id not in self.uploadingFiles: self.uploadingFiles[id] = b""
-        self.uploadingFiles[id] += part
+    def sendMusicPart(self, id, part, current):
+        if id not in self.partMusic: self.partMusic[id] = b""
+        self.partMusic[id] += part
         return 0
 
-    def uploadMusic(self, id, filename, current=None):
+    def uploadMusic(self, id, filename, current):
         file = open("music_server/" + filename, "wb")
-        file.write(self.uploadingFiles[id])
+        file.write(self.partMusic[id])
         file.close()
         return 0
 
-    def getNewIndex(self, current=None):
+    def getNewIndex(self, current):
         index = self.index
         self.index += 1
         return index
     
-    def playMusic(self, musicName, current=None):
+    def playMusic(self, musicName, current):
         file = "music_server/" + musicName + ".mp3"
-        print(file)
-        if os.path.exists(file) != True: return False
-        self.media = self.player.media_new(file)
 
-        # Setting media options to cast it
-        self.media.add_option("sout=#rtp{mux=ts,ttl=10,port=5000,sdp=rtsp://127.0.0.1:5000/music}")
-        self.media.add_option("--no-sout-all")
-        self.media.add_option("--sout-keep")
-        self.media.get_mrl()
+        if os.path.exists(file) != True: 
+            return False
+        
+        media = self.player.media_new(file)
+        media.add_option("sout=#rtp{mux=ts,ttl=10,port=5000,sdp=rtsp://127.0.0.1:5000/music}")
+        media.add_option("--no-sout-all")
+        media.add_option("--sout-keep")
+        media.get_mrl()
+        self.player = self.player.media_player_new()
+        self.player.set_media(media)
 
-        self.media_player = self.player.media_player_new()
-        self.media_player.set_media(self.media)
-
-        self.media_player.play()
+        self.player.play()
         return True
 
+    def stopMusic(self, current):
+        self.player.stop()
+        return True
+    
     def searchMusic(self, musicName, current):
-         # Change the current working directory to the "music_server" directory
         os.chdir('music_server')
+        musicList = []
 
-        # Create an empty list to store the music file names that match the search criteria
-        music_list = []
-
-        # Use glob to find music files that match the search string
         for file_name in glob.glob(f'*{musicName}*'):
-            # If the file is an MP3 file, add it to the music list
-            if file_name.endswith('.mp3'):
-                music_list.append(file_name)
 
-        # Return the list of music file names that match the search criteria
-        return music_list
+            if file_name.endswith('.mp3'):
+                musicList.append(file_name)
+
+        return musicList
         
 
     def delete(self, musicName, current):
