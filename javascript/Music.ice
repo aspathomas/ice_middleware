@@ -2,6 +2,8 @@
 // Copyright (c) ZeroC, Inc. All rights reserved.
 //
 
+[["js:es6-module"]]
+
 module Demo
 {
     sequence<string> listMusique;

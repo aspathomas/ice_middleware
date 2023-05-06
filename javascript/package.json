@@ -1,0 +1,25 @@
+{
+  "scripts": {
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "dependencies": {
+    "@richienb/vlc": "^3.0.2",
+    "ice": "^3.7.80",
+    "slice2js": "^3.7.8",
+    "vlc-player": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.19.12",
+    "del": "^5.0.0",
+    "gulp": "^4.0.2",
+    "gulp-ext-replace": "^0.3.0",
+    "gulp-ice-builder": "^3.0.2",
+    "gulp-newer": "^1.4.0",
+    "gulp-terser": "^1.4.1",
+    "gulp-typescript": "^5.0.1",
+    "pump": "^3.0.0",
+    "typescript": "^4.5.4",
+    "vinyl-paths": "^3.0.0"
+  }
+}
