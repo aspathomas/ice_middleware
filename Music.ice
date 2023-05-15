@@ -14,6 +14,7 @@ module Demo
         bool playMusic(string musicName);
         bool stopMusic();
         bool delete(string musicName);
+        bool remaneMusic(string musicName, string newName);
         listMusique searchMusic(string titre);
         int getNewIndex();
         void shutdown();

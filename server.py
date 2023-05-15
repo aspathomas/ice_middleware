@@ -72,8 +72,19 @@ class MusicI(Demo.Music):
         os.chdir(source)
         return musicList
         
+    def remaneMusic(self, musicName : str, newName : str, current):
+        musicPath = "music_server/" + musicName + ".mp3"
+        newPath = "music_server/" + newName + ".mp3"
 
-    def delete(self, musicName, current):
+        try:
+            os.rename(musicPath, newPath)
+            return True
+        except OSError:
+            # Error occurred while renaming the file
+            return False
+
+    def delete(self, musicName : str, current)-> bool:
+
         file = "music_server/" + musicName + ".mp3"
         print(file)
         if (os.path.exists(file)):

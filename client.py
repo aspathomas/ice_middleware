@@ -35,8 +35,6 @@ def run(communicator):
         print("invalid proxy")
         sys.exit(1)
 
-    oneway = Demo.MusicPrx.uncheckedCast(twoway.ice_oneway())
-
     menu()
 
     lecteur = Lecteur()
@@ -56,12 +54,12 @@ def run(communicator):
                 # File found
                 file = open(filenameMp3, "rb")
                 fileSize = os.stat(filenameMp3).st_size
-                quotient, remainder = divmod(fileSize, 102400)  # 100kB max = 102400 Bytes
+                quotient, remainder = divmod(fileSize, 61440)  # 60kB max
 
                 id = twoway.getNewIndex()
 
                 for i in range(quotient):
-                    part = file.read(102400)
+                    part = file.read(61440)
                     twoway.sendMusicPart(id, part)
 
                 part = file.read(remainder)
@@ -76,6 +74,14 @@ def run(communicator):
                 music = input("Entrer le nom du musique:\n")
                 list = twoway.searchMusic(music)
                 print(list)
+            elif c == 're':
+                music = input("Entrer le nom du musique:\n")
+                newName = input("Entrer le nouveau nom:\n")
+                isRename = twoway.remaneMusic(music, newName)
+                if isRename is True:
+                    print("La chanson a été renommé")
+                else:
+                    print("échec")
             elif c == 's':
                 music = input("Entrer le nom du musique:\n")
                 isDelete = twoway.delete(music)
@@ -119,6 +125,7 @@ def menu():
     print("""
         a: ajouter une musique
         r: rechercher une musique par titre
+        re: renommer une musique
         s: supprimer une musique
         j: jouer une musique
         p: pause
